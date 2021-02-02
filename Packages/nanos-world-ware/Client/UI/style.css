@@ -6,6 +6,7 @@ body {
     margin: 0px;
     padding: 0px;
     margin-bottom: 20px;
+    /*background-image: url('https://pbs.twimg.com/media/EUTJpgbXgAE0S2e.png');*/
 }
 
 #weapon_ammo_container {
@@ -162,7 +163,49 @@ body {
 	margin-left: -250px;
 	width: 500px;
     height: 40px;
-	text-shadow: 2px 2px 5px #000;
+    text-shadow: 2px 2px 5px #000;
+}
+
+#round_outer{
+    display : flex;
+    align-items : center;
+    justify-content: center;
+}
+#round_over{
+    
+    display: table-cell;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+	bottom: 50%;
+    left: 50%;
+	margin-left: -300px;
+	width: 600px; 
+    text-shadow: 2px 2px 5px #000;
+
+    /* Internet Explorer 10 */
+    display:-ms-flexbox;
+    -ms-flex-pack:center;
+    -ms-flex-align:center;
+
+    /* Firefox */
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    /* Safari, Opera, and Chrome */
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+
+    /* W3C */
+    display:box;
+    box-pack:center;
+    box-align:center;
+
+   
 }
 
 

@@ -4,7 +4,6 @@ World:SpawnDefaultSun()
 
 -- Sets the same time for everyone
 local gmt_time = os.date("!*t", os.time())
-local prolougeSound
 --World:SetTime((gmt_time.hour * 60 + gmt_time.min) % 24, gmt_time.sec)
 World:SetTime(12,00)
 World:SetWeather(0)
@@ -12,6 +11,17 @@ World:SetWind(0)
 World:SetSunSpeed(0)
 
 global_ware_round = 1
+
+
+local prolougeSound = Sound(
+	Vector(-510, 145, 63), -- Location (if a 3D sound)
+	"ware::WARE_Prologue", -- Asset Path
+	true, -- Is 2D Sound
+	true, -- Auto Destroy (if to destroy after finished playing)
+	1, -- Sound Type (Music)
+	1, -- Volume
+	1 -- Pitch
+)
 
 function round(num, numDecimalPlaces)
   if numDecimalPlaces and numDecimalPlaces>0 then
@@ -22,22 +32,17 @@ function round(num, numDecimalPlaces)
 end
 
 Events:on("ProlougeMusic", function()
-	local MySound = Sound(
-		Vector(-510, 145, 63), -- Location (if a 3D sound)
-		"ware::WARE_Prologue", -- Asset Path
-		true, -- Is 2D Sound
-		true, -- Auto Destroy (if to destroy after finished playing)
-		1, -- Sound Type (Music)
-		1, -- Volume
-		1 -- Pitch
-	)
-	MySound:Play()
-	prolougeSound = MySound
+	if not prolougeSound:IsPlaying() then
+		prolougeSound:Play()
+	end
 end)
 
 Events:on("StartWare", function()
-	if prolougeSound:IsValid() and prolougeSound:IsPlaying() then
-		prolougeSound:FadeOut(1000,0)
+	if prolougeSound:IsValid() and prolougeSound:IsPlaying() == true then
+		--prolougeSound:FadeOut(1000,0)
+		prolougeSound:Stop()
+		prolougeSound:Destroy()
+		prolougeSound = nil
 	end
 end)
 
@@ -67,4 +72,27 @@ Events:on("PlaySound", function(soundname)
 		1 -- Pitch
 	)
 	--MySound:Play()
+end)
+
+Events:on("ShowWinners", function()
+	local allPlayers = {}
+	local highestScore = 0;
+	for key, ply in pairs(NanosWorld:GetPlayers()) do
+		if (ply:GetControlledCharacter()) then
+			allPlayers[#allPlayers+1] = {}
+			allPlayers[#allPlayers]["name"] = ply:GetValue("Nametag")
+			allPlayers[#allPlayers]["points"] = ply:GetValue("warePoints")	
+
+			if (ply:GetValue("warePoints")) > highestScore then
+				highestScore = ply:GetValue("warePoints");
+			end
+		end
+	end
+
+	--[[for key, ply in pairs(allPlayers)) do
+		if ply["points"] == "warePoints" then
+			-think about something how to do that
+		end
+	end]]
+	local roundOverString = "";
 end)

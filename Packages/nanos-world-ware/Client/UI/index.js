@@ -1,10 +1,17 @@
 var setText = '';
+var setTextEnd = '';
+
+$( document ).ready(function() {
+    $('#ware_text').hide();
+    $('#round_over').hide();
+});
 
 Events.on("UpdateText", function(myText) {
 	$('#ware_text').slideDown("fast");
 	setText = myText;
     // Using JQuery, overrides the HTML content of the SPAN with the new health value7
     $('#ware_text').slideUp("fast", function(){
+        $('#ware_text').show();
 		  $('#ware_text').html(setText);
 		  $('#ware_text').slideDown("fast");
 	});
@@ -62,3 +69,4 @@ Events.on("SetText", function(health) {
     else
         $("#health_container").css("background-image", "linear-gradient(to left, #00000000, #00000080)");
 })
+

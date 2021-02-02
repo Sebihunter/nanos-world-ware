@@ -489,7 +489,7 @@ Package:on("Load", function()
 		end
 	end
 	
-	table.insert(wareTimers, Timer:SetTimeout(12000, function()
+	table.insert(wareTimers, Timer:SetTimeout(2000, function()
 		if (#NanosWorld:GetPlayers() < 1) then
 			return true
 		else
