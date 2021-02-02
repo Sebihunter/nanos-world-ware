@@ -8,10 +8,6 @@ A minigames gamemode based on the popular gamemodes "Ware" for Multi Theft Auto 
 The gamemode requires the nanos-world-inventory-system. It is currently included in thi git.
 More Information: https://github.com/gtnardy/nanos-world-inventory-system
 
-### The gamemode
-Unless you know what you are doing, please grab the release available from here:
-https://github.com/Thadah/GarryWare13/releases/download/v2.0.0/garryware13.zip
-
 ## INSTALLATION
 The gamemode is not suitable for public use in it's current state. To install it simply extract the package and assets into your nanos world server and use the map "NanosWorld::BlankMap"
 
