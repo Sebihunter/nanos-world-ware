@@ -320,7 +320,7 @@ function endMinigame()
 			playSoundForAll(ply, "ware::WARE_Ending")
 			Events:BroadcastRemote("ShowWinners", {})
 			table.insert(wareTimers, Timer:SetTimeout(10000, function()
-				--Server:ReloadPackage("nanos-world-ware")
+				Server:ReloadPackage("nanos-world-ware")
 				return false
 			end))	
 			return false
@@ -362,6 +362,7 @@ Player:on("Spawn", function(player)
 
 	resetPlayer(player)
 	Events:CallRemote("syncWareRound", player, {wareRound})
+	Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> has joined the server")
 	--scaleFix:SetScale(Vector(60,60,2))
 	local new_char = Character(spawn_locations[math.random(#spawn_locations)], Rotator(), character_meshes[math.random(#character_meshes)])
 	player:Possess(new_char)
@@ -372,6 +373,11 @@ Player:on("Spawn", function(player)
 	
 	-- Sets a callback to automatically respawn the character, 5 seconds after he dies
 	player:on("Death", function()
+		if (instigator) then
+			Server:BroadcastChatMessage("<cyan>" .. instigator:GetName() .. "</> killed <cyan>" .. player:GetName() .. "</>")
+		else
+			Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> died")
+		end		
 		Timer:SetTimeout(10000, function(player)
 			if player and player:IsValid() then
 				local character = player:GetControlledCharacter()
@@ -399,6 +405,7 @@ end)
 -- When Player Unpossess a Character (when player is unpossessing because is disconnecting 'is_player_disconnecting' = true)
 Player:on("UnPossess", function(player, character, is_player_disconnecting)
 	if (is_player_disconnecting) then
+		Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> has left the server")
 		character:Destroy()
 		if (#NanosWorld:GetPlayers() == 1) then
 			Server:ReloadPackage("nanos-world-ware") -- End the gamemode if nobody is online
