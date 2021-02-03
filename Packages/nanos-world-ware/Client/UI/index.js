@@ -11,9 +11,9 @@ Events.on("UpdateText", function(myText) {
 	setText = myText;
     // Using JQuery, overrides the HTML content of the SPAN with the new health value7
     $('#ware_text').slideUp("fast", function(){
+        $('#ware_text').html(setText);
         $('#ware_text').show();
-		  $('#ware_text').html(setText);
-		  $('#ware_text').slideDown("fast");
+		 $('#ware_text').slideDown("fast");
 	});
 });
 

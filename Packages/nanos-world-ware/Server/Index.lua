@@ -5,7 +5,7 @@ map_boundaries = {}
 wareState = -1
 wareGame = -1
 wareRound = 0
-wareMaxRounds = 5
+wareMaxRounds = 20
 wareTimers = {}
 wareObjects = {}
 
