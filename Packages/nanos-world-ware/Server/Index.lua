@@ -5,7 +5,7 @@ map_boundaries = {}
 wareState = -1
 wareGame = -1
 wareRound = 0
-wareMaxRounds = 20
+wareMaxRounds = 5
 wareTimers = {}
 wareObjects = {}
 
@@ -50,11 +50,11 @@ syncedValues = {}
 wareGameList = {}
 
 wareGames = {
-	{"Crouch", 4000, false}, -- 1
-	{"Jump", 4000, false}, -- 2
-	{"Walk slowly", 7000, false}, -- 3
-	{"Don't move", 7000, false}, -- 4
-	{"Don't stop running", 7000, false}, -- 5
+	{"Crouch", 3000, false}, -- 1
+	{"Jump", 3000, false}, -- 2
+	{"Walk slowly", 6000, false}, -- 3
+	{"Don't move", 6000, false}, -- 4
+	{"Don't stop running", 6000, false}, -- 5
 	{"Switch into first-person mode", 3000, false}, --6
 	{"Switch into third-person mode", 3000, false}, -- 7
 	{"Get on the floor", 3000, false}, -- 8
@@ -119,6 +119,11 @@ end
 function playSound(player, sound)
 	Events:CallRemote("PlaySound", player, {sound})
 end
+
+function playSoundForAll(sound)
+	Events:BroadcastRemote("PlaySound", {sound})
+end
+
 
 function setSyncedValue(player, value, key)
 	if not player then return end
@@ -311,10 +316,16 @@ function endMinigame()
 	end
 	
 	if wareRound >= wareMaxRounds then
-		table.insert(wareTimers, Timer:SetTimeout(10000, function()
-			--Server:ReloadPackage("nanos-world-ware")
+		table.insert(wareTimers, Timer:SetTimeout(3000, function()
+			playSoundForAll(ply, "ware::WARE_Ending")
+			Events:BroadcastRemote("ShowWinners", {})
+			table.insert(wareTimers, Timer:SetTimeout(10000, function()
+				--Server:ReloadPackage("nanos-world-ware")
+				return false
+			end))	
 			return false
 		end))		
+		
 	else
 		table.insert(wareTimers, Timer:SetTimeout(3000, function()
 			startMinigame()
@@ -489,7 +500,7 @@ Package:on("Load", function()
 		end
 	end
 	
-	table.insert(wareTimers, Timer:SetTimeout(2000, function()
+	table.insert(wareTimers, Timer:SetTimeout(12000, function()
 		if (#NanosWorld:GetPlayers() < 1) then
 			return true
 		else

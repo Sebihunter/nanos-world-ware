@@ -223,3 +223,39 @@ Player:on("Spawn", function(player)
     RemoveNametag(player)
     AddNametag(player)
 end)
+
+
+Events:on("ShowWinners", function()
+	local allPlayers = {}
+	local highestScore = 0;
+	for key, ply in pairs(NanosWorld:GetPlayers()) do
+		if (ply:GetControlledCharacter()) then
+			allPlayers[#allPlayers+1] = {}
+			allPlayers[#allPlayers][0] = ply:GetName()
+			allPlayers[#allPlayers][1] = ply:GetValue("warePoints")	
+
+			if (ply:GetValue("warePoints")) > highestScore then
+				highestScore = ply:GetValue("warePoints");
+			end
+		end
+	end
+
+	local place = 1;
+	local roundOverString = "<u>Winners</u><br>";
+		table.sort(allPlayers, function(lhs, rhs) return lhs[1] > rhs[1] end)
+	for key, ply in pairs(allPlayers) do
+		if place == 1 then
+			roundOverString = roundOverString.."1st <i>"..tostring(ply[0]).." ("..tostring(ply[1]).."/"..tostring(global_ware_round)..")</i>"
+		elseif place == 2 then
+			roundOverString = roundOverString.."<br>2nd <i>"..tostring(ply[0]).." ("..tostring(ply[1]).."/"..tostring(global_ware_round)..")</i>"
+		elseif place == 3 then
+			roundOverString = roundOverString.."<br>3rd <i>"..tostring(ply[0]).." ("..tostring(ply[1]).."/"..tostring(global_ware_round)..")</i>"
+		elseif place == 4 then
+			roundOverString = roundOverString.."<br><br><small><u>Also played:</u><br><i>"..tostring(ply[0]).." ("..tostring(ply[1]).."/"..tostring(global_ware_round)..")</i></small>"
+		else
+			roundOverString = roundOverString.."<small>, <i>"..tostring(ply[0]).." ("..tostring(ply[1]).."/"..tostring(global_ware_round)..")</i></small>"
+		end
+		place = place+1;
+    end
+    MainHUD:CallEvent("ShowWinners",{tostring(roundOverString)})
+end)

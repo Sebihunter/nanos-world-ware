@@ -17,6 +17,19 @@ Events.on("UpdateText", function(myText) {
 	});
 });
 
+
+Events.on("ShowWinners", function(myText) {
+    setTextEnd = myText;
+    $('#ware_text').slideUp("fast");
+    // Using JQuery, overrides the HTML content of the SPAN with the new health value7
+    $('#round_over').slideUp("fast", function(){
+        $('#ware_text').hide();
+        $('#round_over').html(setTextEnd);
+        $('#round_over').show();
+		$('#round_over').slideDown("fast");
+	});
+});
+
  
 // Register for UpdateWeaponAmmo custom event (from Lua)
 Events.on("UpdateWeaponAmmo", function(enable, clip, bag) {

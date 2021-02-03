@@ -32,7 +32,7 @@ function round(num, numDecimalPlaces)
 end
 
 Events:on("ProlougeMusic", function()
-	if not prolougeSound:IsPlaying() then
+	if prolougeSound and not prolougeSound:IsPlaying() then
 		prolougeSound:Play()
 	end
 end)
@@ -45,8 +45,6 @@ Events:on("StartWare", function()
 		prolougeSound = nil
 	end
 end)
-
-
 
 Events:on("syncWareRound", function(round)
 	if round == 0 then round = 1 end
@@ -62,6 +60,7 @@ Events:on("syncValue", function(ply, value, key)
 end)
 
 Events:on("PlaySound", function(soundname)
+	if not soundname then return end
 	local MySound = Sound(
 		Vector(0, 0, 0), -- Location (if a 3D sound)
 		soundname, -- Asset Path
@@ -72,27 +71,4 @@ Events:on("PlaySound", function(soundname)
 		1 -- Pitch
 	)
 	--MySound:Play()
-end)
-
-Events:on("ShowWinners", function()
-	local allPlayers = {}
-	local highestScore = 0;
-	for key, ply in pairs(NanosWorld:GetPlayers()) do
-		if (ply:GetControlledCharacter()) then
-			allPlayers[#allPlayers+1] = {}
-			allPlayers[#allPlayers]["name"] = ply:GetValue("Nametag")
-			allPlayers[#allPlayers]["points"] = ply:GetValue("warePoints")	
-
-			if (ply:GetValue("warePoints")) > highestScore then
-				highestScore = ply:GetValue("warePoints");
-			end
-		end
-	end
-
-	--[[for key, ply in pairs(allPlayers)) do
-		if ply["points"] == "warePoints" then
-			-think about something how to do that
-		end
-	end]]
-	local roundOverString = "";
 end)
