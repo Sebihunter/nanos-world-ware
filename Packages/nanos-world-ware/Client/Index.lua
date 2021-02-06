@@ -41,8 +41,6 @@ Events:on("StartWare", function()
 	if prolougeSound:IsValid() and prolougeSound:IsPlaying() == true then
 		--prolougeSound:FadeOut(1000,0)
 		prolougeSound:Stop()
-		prolougeSound:Destroy()
-		prolougeSound = nil
 	end
 end)
 

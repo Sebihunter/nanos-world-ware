@@ -43,6 +43,8 @@ Game Ideas:
 --[[
 -- Add Scoreboard with ranks (highscore of the round)
 -- Better graphics
+-- start music when game is running
+-- Freeze winners/loosers list when macrogame is not runnings
 ]]
 
 syncedValues = {}
@@ -52,9 +54,9 @@ wareGameList = {}
 wareGames = {
 	{"Crouch", 3000, false}, -- 1
 	{"Jump", 3000, false}, -- 2
-	{"Walk slowly", 6000, false}, -- 3
-	{"Don't move", 6000, false}, -- 4
-	{"Don't stop running", 6000, false}, -- 5
+	{"Walk slowly", 7000, false}, -- 3
+	{"Don't move", 7000, false}, -- 4
+	{"Don't stop running", 7000, false}, -- 5
 	{"Switch into first-person mode", 3000, false}, --6
 	{"Switch into third-person mode", 3000, false}, -- 7
 	{"Get on the floor", 3000, false}, -- 8
@@ -263,6 +265,7 @@ function startMinigame()
 			local rotation = chr:GetRotation()
 			chr:Destroy()
 			local new_char = Character(position, rotation,"NanosWorld::SK_Mannequin")
+			new_char:on("Death", characterDied)
 			new_char:SetScale(Vector(2,2,2))
 			robotPlayer:Possess(new_char)
 			robotPlayer:SetValue("wareRobot", true)
@@ -307,6 +310,7 @@ function endMinigame()
 					local rotation = chr:GetRotation()
 					chr:Destroy()
 					local new_char = Character(spawn_locations[math.random(#spawn_locations)], Rotator(), character_meshes[math.random(#character_meshes)])	
+					new_char:on("Death", characterDied)
 					new_char:SetLocation(position)
 					new_char:SetRotation(rotation)
 					ply:Possess(new_char)
@@ -372,27 +376,37 @@ Player:on("Spawn", function(player)
 	end
 	
 	-- Sets a callback to automatically respawn the character, 5 seconds after he dies
-	player:on("Death", function()
-		if (instigator) then
-			Server:BroadcastChatMessage("<cyan>" .. instigator:GetName() .. "</> killed <cyan>" .. player:GetName() .. "</>")
-		else
-			Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> died")
-		end		
-		Timer:SetTimeout(10000, function(player)
-			if player and player:IsValid() then
-				local character = player:GetControlledCharacter()
-				if (character and character:IsValid()) then
-					character:SetHealth(100)
-					character:Respawn()
-				end
-
-				return false
-			else
-				return true
-			end
-		end, {player})
-	end)
+	new_char:on("Death", characterDied)
 end)
+
+function characterDied(char, LastDamageTaken, LastBoneDamaged, DamageTypeReason, HitFromDirection, instigator)
+	Server:BroadcastChatMessage("1")
+	local player = char:GetPlayer();
+	
+	if not player:IsValid() then return end
+	Server:BroadcastChatMessage("D1")
+	if (instigator) then
+		Server:BroadcastChatMessage("<cyan>" .. instigator:GetName() .. "</> killed <cyan>" .. player:GetName() .. "</>")
+	else
+		Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> died")
+	end	
+	Server:BroadcastChatMessage("D2")
+	Timer:SetTimeout(3000, function(player)
+		Server:BroadcastChatMessage("D3")
+		if player and player:IsValid() then
+			Server:BroadcastChatMessage("D4")
+			local character = player:GetControlledCharacter()
+			if (character and character:IsValid()) then
+				character:SetHealth(100)
+				character:Respawn()
+			end
+
+			return false
+		else
+			return true
+		end
+	end, {player})
+end
 
 -- Called when Character respawns
 Character:on("Respawn", function(character)
