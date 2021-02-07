@@ -265,7 +265,6 @@ function startMinigame()
 			local rotation = chr:GetRotation()
 			chr:Destroy()
 			local new_char = Character(position, rotation,"NanosWorld::SK_Mannequin")
-			new_char:on("Death", characterDied)
 			new_char:SetScale(Vector(2,2,2))
 			robotPlayer:Possess(new_char)
 			robotPlayer:SetValue("wareRobot", true)
@@ -310,7 +309,6 @@ function endMinigame()
 					local rotation = chr:GetRotation()
 					chr:Destroy()
 					local new_char = Character(spawn_locations[math.random(#spawn_locations)], Rotator(), character_meshes[math.random(#character_meshes)])	
-					new_char:on("Death", characterDied)
 					new_char:SetLocation(position)
 					new_char:SetRotation(rotation)
 					ply:Possess(new_char)
@@ -374,27 +372,21 @@ Player:on("Spawn", function(player)
 	if wareState == -1 then
 		Events:CallRemote("ProlougeMusic", player, {})
 	end
-	
-	-- Sets a callback to automatically respawn the character, 5 seconds after he dies
-	new_char:on("Death", characterDied)
+
 end)
 
-function characterDied(char, LastDamageTaken, LastBoneDamaged, DamageTypeReason, HitFromDirection, instigator)
-	Server:BroadcastChatMessage("1")
+Character:on("Death", function(char, LastDamageTaken, LastBoneDamaged, DamageTypeReason, HitFromDirection, instigator)
 	local player = char:GetPlayer();
 	
 	if not player:IsValid() then return end
-	Server:BroadcastChatMessage("D1")
 	if (instigator) then
 		Server:BroadcastChatMessage("<cyan>" .. instigator:GetName() .. "</> killed <cyan>" .. player:GetName() .. "</>")
 	else
 		Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> died")
 	end	
-	Server:BroadcastChatMessage("D2")
+
 	Timer:SetTimeout(3000, function(player)
-		Server:BroadcastChatMessage("D3")
 		if player and player:IsValid() then
-			Server:BroadcastChatMessage("D4")
 			local character = player:GetControlledCharacter()
 			if (character and character:IsValid()) then
 				character:SetHealth(100)
@@ -406,7 +398,7 @@ function characterDied(char, LastDamageTaken, LastBoneDamaged, DamageTypeReason,
 			return true
 		end
 	end, {player})
-end
+end)
 
 -- Called when Character respawns
 Character:on("Respawn", function(character)
