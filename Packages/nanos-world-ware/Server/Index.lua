@@ -113,6 +113,69 @@ spawn_locations = {
 	Vector(-500, -500, 1300)	
 }
 
+function spawnMap()
+	local mapParts = {
+		--Floor
+		{Vector(0,0, 1000), Rotator(0, 0, 0), Vector(60,60,2), Color(0.93,0.662,0.002,1),  "NanosWorld::SM_Cube"},
+		--Walls
+		{Vector(3000,0, 1000), Rotator(-3, 0, 0),Vector(1,60,20),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000,0, 1000), Rotator(3, 0, 0),Vector(1,60,20),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(0,3000, 1000), Rotator(0, 0, 3), Vector(60,1,20),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(0,-3000, 1000), Rotator(0, 0, -3), Vector(60,1,20),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},		
+		--Walls Upper Edge
+		{Vector(3000,0, 2000), Rotator(0, 0, 0), Vector(3,60,1),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000,0, 2000), Rotator(0, 0, 0), Vector(3,60,1),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(0,3000, 2000), Rotator(0, 0, 0), Vector(60,3,1),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(0,-3000, 2000), Rotator(0, 0, 0), Vector(60,3,1),  Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		--Wall Corners
+		{Vector(3000, -3000, 1000), Rotator(0,0,0); Vector(2,2,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000, -3000, 1000), Rotator(0,0,0); Vector(2,2,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(3000, 3000, 1000), Rotator(0,0,0); Vector(2,2,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000, 3000, 1000), Rotator(0,0,0); Vector(2,2,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		--Wall Collumns
+		{Vector(3000, -2000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(3000, -1000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(3000, 0, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(3000, 1000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(3000, 2000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000, -2000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000, -1000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000, 0, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000, 1000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-3000, 2000, 1000), Rotator(0,0,0); Vector(1,3,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},	
+		{Vector(2000, 3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(1000, 3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(0, 3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-1000, 3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-2000, 3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},		
+		{Vector(2000, -3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(1000, -3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(0, -3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-1000, -3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+		{Vector(-2000, -3000, 1000), Rotator(0,0,0); Vector(3,1,20), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube"},
+	}
+
+	--Blocks in map
+	for i=-2000,2000,1000 do
+		for j=-2000,2000, 1000 do
+			table.insert(mapParts, {Vector(i, j, 1051), Rotator(0,0,0), Vector(8,8,1), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube_VR_02"})
+			table.insert(mapParts, {Vector(i, j, 1000), Rotator(0,0,0), Vector(2,2,4.3), Color(0.9,0.9,0.9,0),  "NanosWorld::SM_Cube_VR_02"})
+		end
+	end
+
+
+	for key, obj in pairs(mapParts) do
+		local MyProp = Prop(obj[1], obj[2], obj[5])
+		MyProp:SetCollision(0)
+		MyProp:SetScale(obj[3])
+		MyProp:SetTintColor(obj[4])
+		MyProp:SetGravityEnabled(false)	
+		MyProp:SetGrabbable(false)
+		table.insert(map_boundaries, MyProp)
+	end	
+
+end
+
 function resetPlayer(player)
 	setSyncedValue(player, "wareWon", false)
 	setSyncedValue(player, "warePoints", 0)
@@ -497,14 +560,11 @@ Package:on("Load", function()
 	Server:BroadcastChatMessage("<orange>-</> The person with the most points after <orange>"..wareMaxRounds.." rounds</> wins.")
 	Server:BroadcastChatMessage("The game starts in <orange>10 seconds</>.")
 	Server:BroadcastChatMessage("<bold>*********************************************************</>")
-	local MyProp = Prop( Vector(0,0, 1000), Rotator(0, 0, 0),  "NanosWorld::SM_Cylinder")
-	MyProp:SetCollision(0)
-	MyProp:SetScale(Vector(60,60,2))
-	MyProp:SetTintColor(Color(0.2,0.2,0,0))
-	MyProp:SetGravityEnabled(false)
-	Events:BroadcastRemote("ProlougeMusic", {})
-	--scaleFix = MyProp
-	table.insert(map_boundaries, MyProp)
+
+	spawnMap()
+	Events:BroadcastRemote("ProlougeMusic", {}) 
+	
+	
 	for key, ply in pairs(NanosWorld:GetPlayers()) do
 		if (ply:GetControlledCharacter()) then
 			local ch = ply:GetControlledCharacter()

@@ -5,7 +5,7 @@ World:SpawnDefaultSun()
 -- Sets the same time for everyone
 local gmt_time = os.date("!*t", os.time())
 --World:SetTime((gmt_time.hour * 60 + gmt_time.min) % 24, gmt_time.sec)
-World:SetTime(12,00)
+World:SetTime(16,00)
 World:SetWeather(0)
 World:SetWind(0)
 World:SetSunSpeed(0)
