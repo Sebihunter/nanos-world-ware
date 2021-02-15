@@ -1,5 +1,6 @@
 -- List of Character Meshes
 map_boundaries = {}
+macrogame_objects = {}
 --scaleFix = nil
 
 wareState = -1
@@ -62,7 +63,10 @@ wareGames = {
 	{"Get on the floor", 3000, false}, -- 8
 	{"Punch somebody", 5000, false},-- 9
 	{"Punch the robot", 10000, false},-- 10
-	{"Don't get hit", 5000, false} -- 11
+	{"Don't get hit", 5000, false}, -- 11
+	{"Get on a box", 5000, false}, -- 12 --TODO: Add weapon to shoot others via force (once, like crowbar throw in gware)
+	{"Avoid the exploding barrel", 5000, false}, -- 13 WARNING NOT DONE!°!!!!!!!!!!!!!!!!!!!!!
+	{"Get in the marker", 5000, false} -- 14 --TODO: Add weapon to shoot others via force (once, like crowbar throw in gware)
 }
 	
 
@@ -217,9 +221,8 @@ function startMinigame()
 	wareGame = wareGameList[selectGame]
 	--Server:BroadcastChatMessage(wareGame.." "..selectGame.." "..#wareGames.." "..#wareGameList)
 	table.remove(wareGameList, selectGame)
-	
 	--wareGame = math.random(1, #wareGames)
-	--wareGame = 1
+	wareGame = 13
 	
 	local gameDuration = wareGames[wareGame][2]/6
 	for i = 1, 5, 1 do --pseudocode
@@ -264,6 +267,30 @@ function startMinigame()
 							setSyncedValue(ply, "wareWon", true)							
 						end
 					end			
+				elseif wareGame == 12 then
+					local ch = ply:GetControlledCharacter()
+					if ch and ch:IsValid() and ch:GetLocation().Z < 1200 then
+						if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+					elseif ch and ch:IsValid() and ch:GetLocation().Z > 1300 then
+						if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+					end
+				elseif wareGame == 14 then
+					local obj = macrogame_objects[1]
+					local ch = ply:GetControlledCharacter()
+					if obj and obj:IsValid() and ch and ch:IsValid() then
+						if ch:GetLocation():Distance(obj:GetLocation()) > 250 then
+							if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+						else
+							if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+						end
+					end
+				end
+			end
+
+			if wareGame == 13 and i == 5 then
+				local obj = macrogame_objects[1]
+				if obj and obj:IsValid() then
+					obj:Explode()
 				end
 			end
 			return false
@@ -338,7 +365,40 @@ function startMinigame()
 			if ch then
 				setSyncedValue(ply, "wareWon", true)
 			end
-		end		
+		end	
+	elseif wareGame == 13 then
+		local pos = spawn_locations[math.random(#spawn_locations)]
+		local MyProp = Grenade(pos,Rotator(0, 0, 0),"NanosWorld::SM_OilDrum","NanosWorld::P_Explosion_Dirt","NanosWorld::A_Explosion_Large")
+		MyProp:SetMaterialColorParameter("Tint", Color(1,0.0,0.0,1))
+		MyProp:SetScale(Vector(3,3,3))
+		MyProp.BaseDamage = 100
+		MyProp.DamageInnerRadius = 3000
+
+		--Debug for SyedMuhammad (figuring out granade issues)
+		table.insert(macrogame_objects, MyProp)		
+		MyProp = Prop(
+		pos,
+		Rotator(0, 90, 90),
+		"NanosWorld::SM_Crate_07"
+		)	
+		table.insert(macrogame_objects, MyProp)		
+table.insert(macrogame_objects, MyProp)		
+	elseif wareGame == 14 then
+		local MyProp = Prop(spawn_locations[math.random(#spawn_locations)], Rotator(), "NanosWorld::SM_Cylinder")
+		MyProp:SetCollision(0)
+		MyProp:SetDefaultMaterial()
+		MyProp:SetMaterialColorParameter("Tint", Color(0.93,0.662,0.002,0.5))
+		MyProp:SetGravityEnabled(false)	
+		MyProp:SetGrabbable(false)
+		MyProp:SetScale(Vector(5,5,400))
+		MyProp:SetCollision(2)
+		table.insert(macrogame_objects, MyProp)		
+		for key, ply in pairs(NanosWorld:GetPlayers()) do
+			local ch = ply:GetControlledCharacter()
+			if ch then
+				setSyncedValue(ply, "wareWon", true)
+			end
+		end				
 	end
 	
 	table.insert(wareTimers, Timer:SetTimeout(wareGames[wareGame][2], function()
@@ -351,6 +411,27 @@ end
 
 
 function endMinigame()
+	for key, ply in pairs(NanosWorld:GetPlayers()) do	
+		if wareGame == 12 then
+			local ch = ply:GetControlledCharacter()
+			if ch and ch:IsValid() and ch:GetLocation().Z < 1200 then
+				if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+			elseif ch and ch:IsValid() and ch:GetLocation().Z > 1300 then
+				if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+			end
+		elseif wareGame == 14 then
+			local obj = macrogame_objects[1]
+			local ch = ply:GetControlledCharacter()
+			if obj and obj:IsValid() and ch and ch:IsValid() then
+				if ch:GetLocation():Distance(obj:GetLocation()) > 250 then
+					if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+				else
+					if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+				end
+			end
+		end
+	end	
+
 	wareState = 0
 	Events:BroadcastRemote("syncWareRound", {wareRound})
 	for key, ply in pairs(NanosWorld:GetPlayers()) do
@@ -379,7 +460,12 @@ function endMinigame()
 			end
 		end
 	end
-	
+	for i = 1,#macrogame_objects, 1 do
+		if macrogame_objects[i] and macrogame_objects[i]:IsValid() then
+			macrogame_objects[i]:Destroy()
+		end
+	end		
+	macrogame_objects = {}
 	if wareRound >= wareMaxRounds then
 		table.insert(wareTimers, Timer:SetTimeout(3000, function()
 			playSoundForAll(ply, "ware::WARE_Ending")
@@ -504,7 +590,10 @@ Character:on("TakeDamage", function(chr, damage, bonestring, damType, fromDirect
 		elseif wareGame == 11 and wareState == 1 and instigator ~= ply and instigator:GetValue("wareWon") ~= true then
 			setSyncedValue(ply, "wareWon", false)
 			playSound(instigator, "ware::WARE_l"..math.random(1,3))	
-		end	
+		elseif wareGame == 13 and wareState == 1 and damType == 1 then
+			setSyncedValue(ply, "wareWon", false)
+			playSound(instigator, "ware::WARE_l"..math.random(1,3))	
+		end
 	end
 end)
 
@@ -588,8 +677,15 @@ end)
 Package:on("Unload", function()
 	print("nanos-world-ware unloaded")
 	for i = 1, #map_boundaries, 1 do --pseudocode
-		map_boundaries[i]:Destroy()
+		if map_boundaries[i] and map_boundaries[i]:IsValid() then
+			map_boundaries[i]:Destroy()
+		end
 	end	
+	for i = 1,#macrogame_objects, 1 do --pseudocode
+		if macrogame_objects[i] and macrogame_objects[i]:IsValid() then
+			macrogame_objects[i]:Destroy()
+		end
+	end		
 end)
 
 
