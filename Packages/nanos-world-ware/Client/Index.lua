@@ -32,7 +32,7 @@ function round(num, numDecimalPlaces)
 end
 
 Events:on("ProlougeMusic", function()
-	if prolougeSound and not prolougeSound:IsPlaying() then
+	if prolougeSound and prolougeSound:IsValid() and prolougeSound:IsPlaying() == false then
 		prolougeSound:Play()
 	end
 end)
