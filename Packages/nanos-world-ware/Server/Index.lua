@@ -15,14 +15,11 @@ wareObjects = {}
 Game Ideas:
 - Survive
 - Kill somebody
-- Avoid the explosion
 - Avoid the insanity cow
 - Dont get punched by the robot
 - Dive
 - Type in the answer (maths)
 - Don't fall
-- jump on the boxes
-- get in the checkpoint
 - Land safe (parachute)
 - Do the crab (look up)
 - Stay dry
@@ -222,7 +219,6 @@ function startMinigame()
 	--Server:BroadcastChatMessage(wareGame.." "..selectGame.." "..#wareGames.." "..#wareGameList)
 	table.remove(wareGameList, selectGame)
 	--wareGame = math.random(1, #wareGames)
-	wareGame = 13
 	
 	local gameDuration = wareGames[wareGame][2]/6
 	for i = 1, 5, 1 do --pseudocode
@@ -386,7 +382,7 @@ table.insert(macrogame_objects, MyProp)
 	elseif wareGame == 14 then
 		local MyProp = Prop(spawn_locations[math.random(#spawn_locations)], Rotator(), "NanosWorld::SM_Cylinder")
 		MyProp:SetCollision(0)
-		MyProp:SetDefaultMaterial()
+		MyProp:SetDefaultMaterial(2)
 		MyProp:SetMaterialColorParameter("Tint", Color(0.93,0.662,0.002,0.5))
 		MyProp:SetGravityEnabled(false)	
 		MyProp:SetGrabbable(false)
@@ -501,7 +497,7 @@ function resetWare()
 end
 
 -- When Player Connects, spawns a new Character and gives it to him
-Player:on("Spawn", function(player)
+Player:Subscribe("Spawn", function(player)
 	if (#NanosWorld:GetPlayers() ~= 0) then
 		for key, ply in pairs(NanosWorld:GetPlayers()) do
 			for key2, value in pairs(syncedValues) do
@@ -524,7 +520,7 @@ Player:on("Spawn", function(player)
 
 end)
 
-Character:on("Death", function(char, LastDamageTaken, LastBoneDamaged, DamageTypeReason, HitFromDirection, instigator)
+Character:Subscribe("Death", function(char, LastDamageTaken, LastBoneDamaged, DamageTypeReason, HitFromDirection, instigator)
 	local player = char:GetPlayer();
 	
 	if not player:IsValid() then return end
@@ -550,7 +546,7 @@ Character:on("Death", function(char, LastDamageTaken, LastBoneDamaged, DamageTyp
 end)
 
 -- Called when Character respawns
-Character:on("Respawn", function(character)
+Character:Subscribe("Respawn", function(character)
 	-- Sets the Initial Character's Location (location where the Character will spawn). After the Respawn event, a
 	-- call for SetLocation(InitialLocation) will be triggered. If you always want something to respawn at the same
 	-- position you do not need to keep setting SetInitialLocation, this is just for respawning at random spots
@@ -558,7 +554,7 @@ Character:on("Respawn", function(character)
 end)
 
 -- When Player Unpossess a Character (when player is unpossessing because is disconnecting 'is_player_disconnecting' = true)
-Player:on("UnPossess", function(player, character, is_player_disconnecting)
+Player:Subscribe("UnPossess", function(player, character, is_player_disconnecting)
 	if (is_player_disconnecting) then
 		Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> has left the server")
 		character:Destroy()
@@ -569,14 +565,14 @@ Player:on("UnPossess", function(player, character, is_player_disconnecting)
 end)
 
 -- Catchs a custom event "MapLoaded" to override this script spawn locations
-Events:on("MapLoaded", function(map_custom_spawn_locations)
+Events:Subscribe("MapLoaded", function(map_custom_spawn_locations)
 	spawn_locations = map_custom_spawn_locations
 	
 	
 end)
 
 --0 - Shot, 1 - Explosion
-Character:on("TakeDamage", function(chr, damage, bonestring, damType, fromDirection, instigator)
+Character:Subscribe("TakeDamage", function(chr, damage, bonestring, damType, fromDirection, instigator)
 	local ply = chr:GetPlayer()
 	if ply then
 		if wareGame == 9 and wareState == 1 and instigator ~= ply and instigator:GetValue("wareWon") ~= true then
@@ -599,7 +595,7 @@ end)
 
 
 --0 - None, 1 - Standing, 2 - Crouching, 3 - Proning
-Character:on("StanceModeChanged", function(chr, oldState, newState)
+Character:Subscribe("StanceModeChanged", function(chr, oldState, newState)
 	local ply = chr:GetPlayer()
 	if ply then
 		ply:SetValue("stance", newState)
@@ -620,7 +616,7 @@ Character:on("StanceModeChanged", function(chr, oldState, newState)
 end)
 
 --0 - None, 1 - Walking, 2 - Sprinting
-Character:on("GaitModeChanged", function(chr, oldState, newState)
+Character:Subscribe("GaitModeChanged", function(chr, oldState, newState)
 	local ply = chr:GetPlayer()
 	if ply then
 		ply:SetValue("gait", newState)
@@ -629,7 +625,7 @@ end)
 
 
 --0 - None, 1 - Jumping, 2 - Climbing, 3 - Vaulting, 4 - Falling, 5 - HighFalling, 6 - Parachuting, 7 - SkyDiving
-Character:on("FallingModeChanged", function(chr, oldState, newState)
+Character:Subscribe("FallingModeChanged", function(chr, oldState, newState)
 	local ply = chr:GetPlayer()
 	if ply then
 		if wareGame == 2 and newState == 1 then
@@ -639,7 +635,7 @@ Character:on("FallingModeChanged", function(chr, oldState, newState)
 	end
 end)
 
-Package:on("Load", function()
+Package:Subscribe("Load", function()
 	print("nanos-world-ware loaded")
 	Server:BroadcastChatMessage("<bold>*********************************************************</>")
 	Server:BroadcastChatMessage("Welcome to <orange>nanos world ware</> dev-version!")
@@ -674,7 +670,7 @@ Package:on("Load", function()
 
 end)
 
-Package:on("Unload", function()
+Package:Subscribe("Unload", function()
 	print("nanos-world-ware unloaded")
 	for i = 1, #map_boundaries, 1 do --pseudocode
 		if map_boundaries[i] and map_boundaries[i]:IsValid() then

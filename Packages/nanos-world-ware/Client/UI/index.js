@@ -6,7 +6,7 @@ $( document ).ready(function() {
     $('#round_over').hide();
 });
 
-Events.on("UpdateText", function(myText) {
+Events.Subscribe("UpdateText", function(myText) {
 	$('#ware_text').slideDown("fast");
 	setText = myText;
     // Using JQuery, overrides the HTML content of the SPAN with the new health value7
@@ -18,9 +18,8 @@ Events.on("UpdateText", function(myText) {
 });
 
 
-Events.on("ShowWinners", function(myText) {
+Events.Subscribe("ShowWinners", function(myText) {
     setTextEnd = myText;
-    $('#ware_text').slideUp("fast");
     // Using JQuery, overrides the HTML content of the SPAN with the new health value7
     $('#round_over').slideUp("fast", function(){
         $('#ware_text').hide();
@@ -32,7 +31,7 @@ Events.on("ShowWinners", function(myText) {
 
  
 // Register for UpdateWeaponAmmo custom event (from Lua)
-Events.on("UpdateWeaponAmmo", function(enable, clip, bag) {
+Events.Subscribe("UpdateWeaponAmmo", function(enable, clip, bag) {
     if (enable)
         $("#weapon_ammo_container").show();
     else
@@ -44,7 +43,7 @@ Events.on("UpdateWeaponAmmo", function(enable, clip, bag) {
 });
 
 // Register for UpdateHealth custom event (from Lua)
-Events.on("UpdateHealth", function(health) {
+Events.Subscribe("UpdateHealth", function(health) {
     // Using JQuery, overrides the HTML content of the SPAN with the new health value
     $("#health_current").html(health);
 
@@ -56,12 +55,12 @@ Events.on("UpdateHealth", function(health) {
 	//#health_current
 });
 
-Events.on("UpdatePosition", function(x,y,z) {
+Events.Subscribe("UpdatePosition", function(x,y,z) {
     // Using JQuery, overrides the HTML content of the SPAN with the new health value7
     $("#position_current").html(" "+x+" / "+y+" / "+z);
 });
 
-Events.on("UpdateList", function(wRound,aRound,perc,winners,winstring,losers,losestring) {
+Events.Subscribe("UpdateList", function(wRound,aRound,perc,winners,winstring,losers,losestring) {
     $("#winstreak_current").html(wRound+"/"+aRound+"<br>"+perc+"%");
 	$("#loosers_current").html("("+losers+") Losers");
 	$("#winners_current").html("Winners ("+winners+")");
@@ -72,7 +71,7 @@ Events.on("UpdateList", function(wRound,aRound,perc,winners,winstring,losers,los
 
 
 // Register for UpdateHealth custom event (from Lua)
-Events.on("SetText", function(health) {
+Events.Subscribe("SetText", function(health) {
     // Using JQuery, overrides the HTML content of the SPAN with the new health value
     $("#health_current").html(health);
 

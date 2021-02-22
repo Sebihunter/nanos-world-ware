@@ -11,23 +11,24 @@ MainHUD = WebUI("Main HUD", "file:///UI/index.html")
 
 
 
--- When LocalPlayer spawns, sets an event on it to trigger when we possesses a new character, to store the local controlled character locally. This event is only called once, see Package:on("Load") to load it when reloading a package
-NanosWorld:on("SpawnLocalPlayer", function(local_player)
+-- When LocalPlayer spawns, sets an event on it to trigger when we possesses a new character, to store the local controlled character locally. This event is only called once, see Package:Subscribe("Load") to load it when reloading a package
+NanosWorld:Subscribe("SpawnLocalPlayer", function(local_player)
 	my_local_player = local_player
-    local_player:on("Possess", function(character)
-        UpdateLocalCharacter(character)
-		my_local_character = character
+    local_player:Subscribe("Possess", function(ply,chr)
+		my_local_character = chr
+		UpdateLocalCharacter(chr)
+		
     end)
 end)
 
 -- When package loads, verify if LocalPlayer already exists (eg. when reloading the package), then try to get and store it's controlled character
-Package:on("Load", function()
+Package:Subscribe("Load", function()
     if (NanosWorld:GetLocalPlayer() ~= nil) then
         UpdateLocalCharacter(NanosWorld:GetLocalPlayer():GetControlledCharacter())
     end
 end)
 
-Package:on("Unload", function()
+Package:Subscribe("Unload", function()
     if (MainHUD ~= nil) then
 		MainHUD:SetVisible(false)
 		MainHUD:Destroy()
@@ -40,26 +41,26 @@ end)
 
 
 -- Function to set all needed events on local character (to update the UI when it takes damage or dies)
-function UpdateLocalCharacter(character)
-    -- Verifies if character is not nil (eg. when GetControllerCharacter() doesn't return a character)
-    if (character == nil) then return end
-	my_local_character = character
+function UpdateLocalCharacter(chr)
+	-- Verifies if character is not nil (eg. when GetControllerCharacter() doesn't return a character)
+    if (chr == nil) then return end
+	my_local_character = chr
 	
     -- Updates the UI with the current character's health
-    UpdateHealth(character:GetHealth())
+    UpdateHealth(chr:GetHealth())
 
     -- Sets on character an event to update the health's UI after it takes damage
-    character:on("TakeDamage", function(damage, type, bone, from_direction, instigator)
-        UpdateHealth(character:GetHealth())
+	chr:Subscribe("TakeDamage", function(damage, type, bone, from_direction, instigator)
+        UpdateHealth(chr:GetHealth())
     end)
 
     -- Sets on character an event to update the health's UI after it dies
-    character:on("Death", function()
+    chr:Subscribe("Death", function(chr)
         UpdateHealth(0)
     end)
 
     -- Try to get if the character is holding any weapon
-    local current_picked_item = character:GetPicked()
+    local current_picked_item = chr:GetPicked()
 
     -- If so, update the UI
     if (current_picked_item and current_picked_item:GetType() == "Weapon") then
@@ -67,24 +68,24 @@ function UpdateLocalCharacter(character)
     end
 
     -- Sets on character an event to update his grabbing weapon (to show ammo on UI)
-    character:on("PickUp", function(object)
+    chr:Subscribe("PickUp", function(chr,object)
         if (object:GetType() == "Weapon") then
             UpdateAmmo(true, object:GetAmmoClip(), object:GetAmmoBag())
         end
     end)
 
     -- Sets on character an event to remove the ammo ui when he drops it's weapon
-    character:on("Drop", function(object)
+    chr:Subscribe("Drop", function(chr,object)
         UpdateAmmo(false)
     end)
 
     -- Sets on character an event to update the UI when he fires
-    character:on("Fire", function(weapon)
+    chr:Subscribe("Fire", function(chr, weapon)
         UpdateAmmo(true, weapon:GetAmmoClip(), weapon:GetAmmoBag())
     end)
 
     -- Sets on character an event to update the UI when he reloads the weapon
-    character:on("Reload", function(weapon, ammo_to_reload)
+    chr:Subscribe("Reload", function(chr,weapon, ammo_to_reload)
         UpdateAmmo(true, weapon:GetAmmoClip(), weapon:GetAmmoBag())
     end)
 end
@@ -101,7 +102,7 @@ end
 
 -- Updates valuable information
 local general_timer = Timer:SetTimeout(100, function()
-    if (my_local_character:IsValid() ) then
+    if (my_local_character and my_local_character:IsValid() ) then
 		local my_vector = my_local_character:GetLocation()
 		--MainHUD:CallEvent("UpdatePosition", {tostring(my_vector.X), tostring(my_vector.Y), tostring(my_vector.Z)})
 	end
@@ -144,7 +145,6 @@ local general_timer = Timer:SetTimeout(100, function()
 	
 	for key, ply in pairs(ware_winners) do
 		local points = ply:GetValue("warePoints")
-		--Package:Log(points)
 		if first then
 			first = false
 			winstring = winstring..""..ply:GetName().." ("..points.."/"..aRound.." - "..(round(points/aRound,3)*100).."%)"
@@ -157,7 +157,6 @@ local general_timer = Timer:SetTimeout(100, function()
 	
 	for key, ply in pairs(ware_losers) do
 		local points = ply:GetValue("warePoints")
-		 --Package:Log(points)
 		if first then
 			first = false
 			losestring = losestring..""..ply:GetName().." ("..points.."/"..aRound.." - "..(round(points/aRound,3)*100).."%)"
@@ -171,27 +170,27 @@ end)
 
 
 -- Function to add a Nametag to a Player
-function AddNametag(player, character)
+function AddNametag(player, chr)
     -- Try to get it's character
-    if (character == nil) then
-        character = player:GetControlledCharacter()
-        if (character == nil) then return end
+    if (chr == nil) then
+        chr = player:GetControlledCharacter()
+        if (chr == nil) then return end
     end
 	
 	if player:IsLocalPlayer()then return end
     -- Spawns the Nametag (TextRender), attaches it to the character and saves it to the player's values
     local nametag = TextRender(Vector(0,0,0), Rotator(0,0,0), player:GetName(), Color(0, 1, 0), 1, 0, 24, 1, true)
-    nametag:AttachTo(character, "", Vector(0, 0, 250), Rotator())
+    nametag:AttachTo(chr, "", Vector(0, 0, 250), Rotator())
     player:SetValue("Nametag", nametag)
 	nametag:SetCollision(false)
 end
 
 -- Function to remove a Nametag from  a Player
-function RemoveNametag(player, character)
+function RemoveNametag(player, chr)
     -- Try to get it's character
-    if (character == nil) then
-        character = player:GetControlledCharacter()
-        if (character == nil) then return end
+    if (chr == nil) then
+        chr = player:GetControlledCharacter()
+        if (chr == nil) then return end
     end
 
     -- Gets the Nametag from the player, if any, and destroys it
@@ -202,30 +201,29 @@ function RemoveNametag(player, character)
 end
 
 -- Adds a new Nametag to a character which was possessed
-Character:on("Possessed", function(character, player)
-    AddNametag(player, character)
+Character:Subscribe("Possessed", function(chr, player)
+    AddNametag(player, chr)
 end)
 
 
-Events:on("UpdateText", function(text)
+Events:Subscribe("UpdateText", function(text)
 	MainHUD:CallEvent("UpdateText",{tostring(text)})
 end)
 
 
 -- Removes the Nametag from a character which was unpossessed
-Character:on("UnPossessed", function(character, player)
-    Package:Log("UnPossessed")
-    RemoveNametag(player, character)
+Character:Subscribe("UnPossessed", function(chr, player)
+    RemoveNametag(player, chr)
 end)
 
 -- When a Player is spawned - for when you connect and there is already Player's connected
-Player:on("Spawn", function(player)
+Player:Subscribe("Spawn", function(player)
     RemoveNametag(player)
     AddNametag(player)
 end)
 
 
-Events:on("ShowWinners", function()
+Events:Subscribe("ShowWinners", function()
 	local allPlayers = {}
 	local highestScore = 0;
 	for key, ply in pairs(NanosWorld:GetPlayers()) do

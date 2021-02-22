@@ -31,33 +31,33 @@ function round(num, numDecimalPlaces)
   return math.floor(num + 0.5)
 end
 
-Events:on("ProlougeMusic", function()
+Events:Subscribe("ProlougeMusic", function()
 	if prolougeSound and prolougeSound:IsValid() and prolougeSound:IsPlaying() == false then
 		prolougeSound:Play()
 	end
 end)
 
-Events:on("StartWare", function()
+Events:Subscribe("StartWare", function()
 	if prolougeSound:IsValid() and prolougeSound:IsPlaying() == true then
 		--prolougeSound:FadeOut(1000,0)
 		prolougeSound:Stop()
 	end
 end)
 
-Events:on("syncWareRound", function(round)
+Events:Subscribe("syncWareRound", function(round)
 	if round == 0 then round = 1 end
 	global_ware_round = round
 end)
 
-Events:on("syncValue", function(ply, value, key)
+Events:Subscribe("syncValue", function(ply, value, key)
 	ply:SetValue(value,key)
 end)
 
-Events:on("syncValue", function(ply, value, key)
+Events:Subscribe("syncValue", function(ply, value, key)
 	ply:SetValue(value,key)
 end)
 
-Events:on("PlaySound", function(soundname)
+Events:Subscribe("PlaySound", function(soundname)
 	if not soundname then return end
 	local MySound = Sound(
 		Vector(0, 0, 0), -- Location (if a 3D sound)
