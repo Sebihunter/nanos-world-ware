@@ -2,10 +2,14 @@
 [asset_pack]
 	# Asset Pack Name
 	name =				"ware"
-	# Author
+	# Contributors
 	author =			"DaSebsch"
 	# Version
-	version =			"0.0.1"
+	version =			"1.0.0"
+	# Image URL
+	image =				"https://s20.directupload.net/images/210423/sd7q2lo4.png"
+	# Unreal Folder - the root folder which the assets will have references to each other
+	unreal_folder =		"ware"
 
 # Assets Files
 [assets]
@@ -31,6 +35,7 @@
 		WARE_Count3 = "audio/countdown_ann_sec3"
 		WARE_Count4 = "audio/countdown_ann_sec4"
 		WARE_Count5 = "audio/countdown_ann_sec5"
+		WARE_Ending = "audio/game_ending"
 		WARE_Lose = "audio/game_lose_two"
 		WARE_New = "audio/game_new_two"
 		WARE_Prologue = "audio/game_prologue"

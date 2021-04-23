@@ -2,6 +2,12 @@
 [package]
 	# Package Name
 	name =					"nanos-world-ware"
+	# Contributors
+	author =				"DaSebsch"
+	# Version
+	version =				"1.0.0"
+	# Image URL
+	image =					"https://s20.directupload.net/images/210423/q7rbvdeg.png"
 	# Package Type: 'executable' (normal package) | 'library' (doesn't run - useful for code library)
 	type =					"executable"
 	# Whether to force the Custom Map Script to do NOT load

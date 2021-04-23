@@ -219,6 +219,7 @@ function startMinigame()
 	--Server:BroadcastChatMessage(wareGame.." "..selectGame.." "..#wareGames.." "..#wareGameList)
 	table.remove(wareGameList, selectGame)
 	--wareGame = math.random(1, #wareGames)
+	--wareGame = 13
 	
 	local gameDuration = wareGames[wareGame][2]/6
 	for i = 1, 5, 1 do --pseudocode
@@ -369,15 +370,16 @@ function startMinigame()
 		MyProp:SetScale(Vector(3,3,3))
 		MyProp.BaseDamage = 100
 		MyProp.DamageInnerRadius = 3000
+		table.insert(macrogame_objects, MyProp)
 
 		--Debug for SyedMuhammad (figuring out granade issues)
-		table.insert(macrogame_objects, MyProp)		
+		--[[table.insert(macrogame_objects, MyProp)		
 		MyProp = Prop(
 		pos,
 		Rotator(0, 90, 90),
 		"NanosWorld::SM_Crate_07"
 		)	
-		table.insert(macrogame_objects, MyProp)		
+		table.insert(macrogame_objects, MyProp)		]]
 table.insert(macrogame_objects, MyProp)		
 	elseif wareGame == 14 then
 		local MyProp = Prop(spawn_locations[math.random(#spawn_locations)], Rotator(), "NanosWorld::SM_Cylinder")
