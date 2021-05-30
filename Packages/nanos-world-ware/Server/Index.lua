@@ -11,14 +11,13 @@ wareTimers = {}
 wareObjects = {}
 
 
+
 --[[
 Game Ideas:
 - Survive
-- Kill somebody
 - Avoid the insanity cow
 - Dont get punched by the robot
 - Dive
-- Type in the answer (maths)
 - Don't fall
 - Land safe (parachute)
 - Do the crab (look up)
@@ -45,7 +44,10 @@ Game Ideas:
 -- Freeze winners/loosers list when macrogame is not runnings
 ]]
 
-syncedValues = {}
+--Value syncing is now done via nanos ware, code no longer needed
+--syncedValues = {}
+
+Package:RequirePackage("NanosWorldWeapons")
 
 wareGameList = {}
 
@@ -62,8 +64,10 @@ wareGames = {
 	{"Punch the robot", 10000, false},-- 10
 	{"Don't get hit", 5000, false}, -- 11
 	{"Get on a box", 5000, false}, -- 12 --TODO: Add weapon to shoot others via force (once, like crowbar throw in gware)
-	{"Avoid the exploding barrel", 5000, false}, -- 13 WARNING NOT DONE!°!!!!!!!!!!!!!!!!!!!!!
-	{"Get in the marker", 5000, false} -- 14 --TODO: Add weapon to shoot others via force (once, like crowbar throw in gware)
+	{"Avoid the exploding barrel", 5000, false}, -- 13
+	{"Get in the marker", 5000, false}, -- 14 --TODO: Add weapon to shoot others via force (once, like crowbar throw in gware)
+	{"Maths: Solve it in the chat!", 5000, false}, -- 15
+	{"Kill somebody", 8000, false} -- 16
 }
 	
 
@@ -180,6 +184,7 @@ end
 function resetPlayer(player)
 	setSyncedValue(player, "wareWon", false)
 	setSyncedValue(player, "warePoints", 0)
+	setSyncedValue(player, "mathsAnswer", nil)
 end
 
 function playSound(player, sound)
@@ -193,11 +198,13 @@ end
 
 function setSyncedValue(player, value, key)
 	if not player then return end
-	player:SetValue(value, key)
-	if not syncedValues[value] then
-		table.insert(syncedValues, value)
-	end
-	Events:BroadcastRemote("syncValue", {player, value, key})
+	player:SetValue(value, key, true)
+
+	--This is no longer needed thx to nanos world
+	--if not syncedValues[value] then
+	--	table.insert(syncedValues, value)
+	--end
+	--Events:BroadcastRemote("syncValue", {player, value, key})
 end
 
 function startMinigame()
@@ -219,7 +226,7 @@ function startMinigame()
 	--Server:BroadcastChatMessage(wareGame.." "..selectGame.." "..#wareGames.." "..#wareGameList)
 	table.remove(wareGameList, selectGame)
 	--wareGame = math.random(1, #wareGames)
-	--wareGame = 13
+	wareGame = 16
 	
 	local gameDuration = wareGames[wareGame][2]/6
 	for i = 1, 5, 1 do --pseudocode
@@ -294,8 +301,6 @@ function startMinigame()
 		end, {i}))
 	end	
 	
-	Events:BroadcastRemote("UpdateText", {"<div style='color:#ffa500'>Objective</div> "..wareGames[wareGame][1]})
-
 	if wareGame == 1 then -- Duck
 		for key, ply in pairs(NanosWorld:GetPlayers()) do
 			if (ply:GetValue("stance") == 2) then
@@ -305,9 +310,10 @@ function startMinigame()
 		end
 	elseif wareGame == 2 then
 		-- Do nothing
-	elseif wareGame == 3 or wareGame == 4 or wareGame == 5 then
+	elseif wareGame == 3 or wareGame == 4 or wareGame == 5 or wareGame == 14 then
 		for key, ply in pairs(NanosWorld:GetPlayers()) do
 			setSyncedValue(ply, "wareWon", true)
+			setSyncedValue(ply, "mathsAnswer", nil)
 		end		
 	elseif wareGame == 6 then
 		for key, ply in pairs(NanosWorld:GetPlayers()) do
@@ -371,15 +377,6 @@ function startMinigame()
 		MyProp.BaseDamage = 100
 		MyProp.DamageInnerRadius = 3000
 		table.insert(macrogame_objects, MyProp)
-
-		--Debug for SyedMuhammad (figuring out granade issues)
-		--[[table.insert(macrogame_objects, MyProp)		
-		MyProp = Prop(
-		pos,
-		Rotator(0, 90, 90),
-		"NanosWorld::SM_Crate_07"
-		)	
-		table.insert(macrogame_objects, MyProp)		]]
 table.insert(macrogame_objects, MyProp)		
 	elseif wareGame == 14 then
 		local MyProp = Prop(spawn_locations[math.random(#spawn_locations)], Rotator(), "NanosWorld::SM_Cylinder")
@@ -396,7 +393,32 @@ table.insert(macrogame_objects, MyProp)
 			if ch then
 				setSyncedValue(ply, "wareWon", true)
 			end
-		end				
+		end		
+	elseif wareGame == 15 then
+		local maths_1 = math.random(-20,20)
+		local maths_2 = math.random(-20, 20)
+
+
+		if maths_2 < 0 then
+			Events:BroadcastRemote("UpdateText", {"<div style='color:#ffa500'>Objective</div> "..wareGames[wareGame][1].."<br>"..tostring(maths_1)..""..tostring(maths_2).."=???"})
+		else
+			Events:BroadcastRemote("UpdateText", {"<div style='color:#ffa500'>Objective</div> "..wareGames[wareGame][1].."<br>"..tostring(maths_1).."+"..tostring(maths_2).."=???"})
+		end
+		
+		for key, ply in pairs(NanosWorld:GetPlayers()) do
+			setSyncedValue(ply, "mathsAnswer", maths_1+maths_2)		
+		end
+	elseif wareGame == 16 then
+
+		for key, ply in pairs(NanosWorld:GetPlayers()) do
+			local ch = ply:GetControlledCharacter()
+			if ch then
+				ch:SetHealth(100);
+				local my_ak47 = NanosWorldWeapons.AK47(Vector(0,0,0), Rotator())
+				table.insert(macrogame_objects, my_ak47)
+				ch:PickUp(my_ak47);
+			end
+		end	
 	end
 	
 	table.insert(wareTimers, Timer:SetTimeout(wareGames[wareGame][2], function()
@@ -500,14 +522,16 @@ end
 
 -- When Player Connects, spawns a new Character and gives it to him
 Player:Subscribe("Spawn", function(player)
-	if (#NanosWorld:GetPlayers() ~= 0) then
+
+	--Value syncing is now done via nanos ware, code no longer needed
+	--[[if (#NanosWorld:GetPlayers() ~= 0) then
 		for key, ply in pairs(NanosWorld:GetPlayers()) do
 			for key2, value in pairs(syncedValues) do
 				local key3 = ply:GetValue(value)
 				Events:CallRemote("syncValue", player, {ply, value, key3})
 			end
 		end	
-	end	
+	end	]]
 
 	resetPlayer(player)
 	Events:CallRemote("syncWareRound", player, {wareRound})
@@ -528,6 +552,10 @@ Character:Subscribe("Death", function(char, LastDamageTaken, LastBoneDamaged, Da
 	if not player:IsValid() then return end
 	if (instigator) then
 		Server:BroadcastChatMessage("<cyan>" .. instigator:GetName() .. "</> killed <cyan>" .. player:GetName() .. "</>")
+		if wareGame == 16 and wareState == 1 then
+			setSyncedValue(instigator, "wareWon", true)
+			playSound(instigator, "ware::WARE_w"..math.random(1,3))	
+		end
 	else
 		Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> died")
 	end	
@@ -706,4 +734,10 @@ local general_timer = Timer:SetTimeout(250, function()
 	--	local my_vector = my_local_character:GetLocation()
 	--	MainHUD:CallEvent("UpdatePosition", {tostring(my_vector.X), tostring(my_vector.Y), tostring(my_vector.Z)})
 	--end
+end)
+
+Events:Subscribe("wareClientPoint", function(player)
+    if wareGame == 15 and wareState == 1 then
+		setSyncedValue(player, "wareWon", true)
+	end
 end)

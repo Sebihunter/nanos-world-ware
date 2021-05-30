@@ -23,6 +23,26 @@ local prolougeSound = Sound(
 	1 -- Pitch
 )
 
+Client:Subscribe("Chat", function(text)
+    if NanosWorld:GetLocalPlayer():GetValue("mathsAnswer") then
+		if tostring(NanosWorld:GetLocalPlayer():GetValue("mathsAnswer")) == tostring(text) then 
+			local MySound = Sound(
+				Vector(0, 0, 0), -- Location (if a 3D sound)
+				"ware::WARE_w"..math.random(1,3), -- Asset Path
+				true, -- Is 2D Sound
+				true, -- Auto Destroy (if to destroy after finished playing)
+				0, -- Sound Type (SFX)
+				1, -- Volume
+				1 -- Pitch
+			)
+
+			Events:CallRemote("wareClientPoint",{})
+			return false
+		end
+
+	end
+end)
+
 function round(num, numDecimalPlaces)
   if numDecimalPlaces and numDecimalPlaces>0 then
     local mult = 10^numDecimalPlaces
