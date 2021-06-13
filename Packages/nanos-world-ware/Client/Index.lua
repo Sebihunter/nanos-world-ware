@@ -15,7 +15,7 @@ global_ware_round = 1
 
 local prolougeSound = Sound(
 	Vector(-510, 145, 63), -- Location (if a 3D sound)
-	"ware::WARE_Prologue", -- Asset Path
+	"ware_assets::WARE_Prologue", -- Asset Path
 	true, -- Is 2D Sound
 	true, -- Auto Destroy (if to destroy after finished playing)
 	1, -- Sound Type (Music)
@@ -28,7 +28,7 @@ Client:Subscribe("Chat", function(text)
 		if tostring(NanosWorld:GetLocalPlayer():GetValue("mathsAnswer")) == tostring(text) then 
 			local MySound = Sound(
 				Vector(0, 0, 0), -- Location (if a 3D sound)
-				"ware::WARE_w"..math.random(1,3), -- Asset Path
+				"ware_assets::WARE_w"..math.random(1,3), -- Asset Path
 				true, -- Is 2D Sound
 				true, -- Auto Destroy (if to destroy after finished playing)
 				0, -- Sound Type (SFX)
