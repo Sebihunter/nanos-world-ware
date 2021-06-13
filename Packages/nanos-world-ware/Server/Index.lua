@@ -209,7 +209,7 @@ end
 
 function startMinigame()
 	for key, ply in pairs(NanosWorld:GetPlayers()) do
-		playSound(ply, "ware::WARE_New")
+		playSound(ply, "ware_assets::WARE_New")
 		setSyncedValue(ply, "wareWon", false)
 	end
 	
@@ -233,30 +233,30 @@ function startMinigame()
 		table.insert(wareTimers, Timer:SetTimeout(gameDuration*i, function(i)
 			--Server:BroadcastChatMessage("<orange>"..(6-i).."</>")
 			for key, ply in pairs(NanosWorld:GetPlayers()) do
-				playSound(ply, "ware::WARE_Count"..(6-i))
+				playSound(ply, "ware_assets::WARE_Count"..(6-i))
 				if wareGame == 3 then
 					if ply:GetValue("gait")  ~= 1 then
-						if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) end
+						if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) end
 						setSyncedValue(ply, "wareWon", false)
 					end
 				elseif wareGame == 4 then
 					if ply:GetValue("gait")  ~= 0 then
-						if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) end
+						if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) end
 						setSyncedValue(ply, "wareWon", false)
 					end
 				elseif wareGame == 5 then
 					if ply:GetValue("gait")  ~= 2 then
-						if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) end
+						if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) end
 						setSyncedValue(ply, "wareWon", false)
 					end
 				elseif wareGame == 6 then
 					local ch = ply:GetControlledCharacter()
 					if ch then
 						if ch:GetViewMode() ~= 0 then
-							if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) end
+							if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) end
 							setSyncedValue(ply, "wareWon", false)	
 						else
-							if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) end
+							if ply:GetValue("wareWon") == false then playSound(ply, "ware_assets::WARE_w"..math.random(1,3)) end
 							setSyncedValue(ply, "wareWon", true)							
 						end
 					end			
@@ -264,28 +264,28 @@ function startMinigame()
 					local ch = ply:GetControlledCharacter()
 					if ch then
 						if ch:GetViewMode() == 0 then
-							if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) end
+							if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) end
 							setSyncedValue(ply, "wareWon", false)	
 						else
-							if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) end
+							if ply:GetValue("wareWon") == false then playSound(ply, "ware_assets::WARE_w"..math.random(1,3)) end
 							setSyncedValue(ply, "wareWon", true)							
 						end
 					end			
 				elseif wareGame == 12 then
 					local ch = ply:GetControlledCharacter()
 					if ch and ch:IsValid() and ch:GetLocation().Z < 1200 then
-						if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+						if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
 					elseif ch and ch:IsValid() and ch:GetLocation().Z > 1300 then
-						if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+						if ply:GetValue("wareWon") == false then playSound(ply, "ware_assets::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
 					end
 				elseif wareGame == 14 then
 					local obj = macrogame_objects[1]
 					local ch = ply:GetControlledCharacter()
 					if obj and obj:IsValid() and ch and ch:IsValid() then
 						if ch:GetLocation():Distance(obj:GetLocation()) > 250 then
-							if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+							if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
 						else
-							if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+							if ply:GetValue("wareWon") == false then playSound(ply, "ware_assets::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
 						end
 					end
 				end
@@ -305,7 +305,7 @@ function startMinigame()
 		for key, ply in pairs(NanosWorld:GetPlayers()) do
 			if (ply:GetValue("stance") == 2) then
 				setSyncedValue(ply, "wareWon", true)
-				playSound(ply, "ware::WARE_w"..math.random(1,3))
+				playSound(ply, "ware_assets::WARE_w"..math.random(1,3))
 			end
 		end
 	elseif wareGame == 2 then
@@ -321,7 +321,7 @@ function startMinigame()
 			if ch then
 				if ch:GetViewMode() == 0 then
 					setSyncedValue(ply, "wareWon", true)
-					playSound(ply, "ware::WARE_w"..math.random(1,3))			
+					playSound(ply, "ware_assets::WARE_w"..math.random(1,3))			
 				end
 			end
 		end	
@@ -331,7 +331,7 @@ function startMinigame()
 			if ch then
 				if ch:GetViewMode() == 1 or ch:GetViewMode() == 2 or ch:GetViewMode() == 3 then
 					setSyncedValue(ply, "wareWon", true)
-					playSound(ply, "ware::WARE_w"..math.random(1,3))			
+					playSound(ply, "ware_assets::WARE_w"..math.random(1,3))			
 				end
 			end
 		end			
@@ -339,7 +339,7 @@ function startMinigame()
 		for key, ply in pairs(NanosWorld:GetPlayers()) do
 			if (ply:GetValue("stance") == 3) then
 				setSyncedValue(ply, "wareWon", true)
-				playSound(ply, "ware::WARE_w"..math.random(1,3))
+				playSound(ply, "ware_assets::WARE_w"..math.random(1,3))
 			end
 		end
 	elseif wareGame == 10 then --Punch the robot
@@ -435,18 +435,18 @@ function endMinigame()
 		if wareGame == 12 then
 			local ch = ply:GetControlledCharacter()
 			if ch and ch:IsValid() and ch:GetLocation().Z < 1200 then
-				if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+				if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
 			elseif ch and ch:IsValid() and ch:GetLocation().Z > 1300 then
-				if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+				if ply:GetValue("wareWon") == false then playSound(ply, "ware_assets::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
 			end
 		elseif wareGame == 14 then
 			local obj = macrogame_objects[1]
 			local ch = ply:GetControlledCharacter()
 			if obj and obj:IsValid() and ch and ch:IsValid() then
 				if ch:GetLocation():Distance(obj:GetLocation()) > 250 then
-					if ply:GetValue("wareWon") == true then playSound(ply, "ware::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
+					if ply:GetValue("wareWon") == true then playSound(ply, "ware_assets::WARE_l"..math.random(1,3)) setSyncedValue(ply, "wareWon", false) end
 				else
-					if ply:GetValue("wareWon") == false then playSound(ply, "ware::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
+					if ply:GetValue("wareWon") == false then playSound(ply, "ware_assets::WARE_w"..math.random(1,3)) setSyncedValue(ply, "wareWon", true) end
 				end
 			end
 		end
@@ -456,11 +456,11 @@ function endMinigame()
 	Events:BroadcastRemote("syncWareRound", {wareRound})
 	for key, ply in pairs(NanosWorld:GetPlayers()) do
 		if ply:GetValue("wareWon") == true then
-			playSound(ply, "ware::WARE_Win")
+			playSound(ply, "ware_assets::WARE_Win")
 			setSyncedValue(ply, "warePoints", (ply:GetValue("warePoints"))+1)
 			Events:CallRemote("UpdateText", ply, {"<div style='color:#00ff00'>You won the round.<br>+1 Point(s)</div>"})
 		else
-			playSound(ply, "ware::WARE_Lose")
+			playSound(ply, "ware_assets::WARE_Lose")
 			Events:CallRemote("UpdateText", ply, {"<div style='color:#ff0000'>You lost the round.</div>"})
 		end
 		
@@ -488,7 +488,7 @@ function endMinigame()
 	macrogame_objects = {}
 	if wareRound >= wareMaxRounds then
 		table.insert(wareTimers, Timer:SetTimeout(3000, function()
-			playSoundForAll(ply, "ware::WARE_Ending")
+			playSoundForAll(ply, "ware_assets::WARE_Ending")
 			Events:BroadcastRemote("ShowWinners", {})
 			table.insert(wareTimers, Timer:SetTimeout(10000, function()
 				Server:ReloadPackage("nanos-world-ware")
@@ -554,7 +554,7 @@ Character:Subscribe("Death", function(char, LastDamageTaken, LastBoneDamaged, Da
 		Server:BroadcastChatMessage("<cyan>" .. instigator:GetName() .. "</> killed <cyan>" .. player:GetName() .. "</>")
 		if wareGame == 16 and wareState == 1 then
 			setSyncedValue(instigator, "wareWon", true)
-			playSound(instigator, "ware::WARE_w"..math.random(1,3))	
+			playSound(instigator, "ware_assets::WARE_w"..math.random(1,3))	
 		end
 	else
 		Server:BroadcastChatMessage("<cyan>" .. player:GetName() .. "</> died")
@@ -607,18 +607,18 @@ Character:Subscribe("TakeDamage", function(chr, damage, bonestring, damType, fro
 	if ply then
 		if wareGame == 9 and wareState == 1 and instigator ~= ply and instigator:GetValue("wareWon") ~= true then
 			setSyncedValue(instigator, "wareWon", true)
-			playSound(instigator, "ware::WARE_w"..math.random(1,3))	
+			playSound(instigator, "ware_assets::WARE_w"..math.random(1,3))	
 		elseif wareGame == 10 and wareState == 1 and instigator ~= ply and instigator:GetValue("wareWon") ~= true then
 			if ply:GetValue("wareRobot") == true then			
 				setSyncedValue(instigator, "wareWon", true)
-				playSound(instigator, "ware::WARE_w"..math.random(1,3))	
+				playSound(instigator, "ware_assets::WARE_w"..math.random(1,3))	
 			end
 		elseif wareGame == 11 and wareState == 1 and instigator ~= ply and instigator:GetValue("wareWon") ~= true then
 			setSyncedValue(ply, "wareWon", false)
-			playSound(instigator, "ware::WARE_l"..math.random(1,3))	
+			playSound(instigator, "ware_assets::WARE_l"..math.random(1,3))	
 		elseif wareGame == 13 and wareState == 1 and damType == 1 then
 			setSyncedValue(ply, "wareWon", false)
-			playSound(instigator, "ware::WARE_l"..math.random(1,3))	
+			playSound(instigator, "ware_assets::WARE_l"..math.random(1,3))	
 		end
 	end
 end)
@@ -631,16 +631,16 @@ Character:Subscribe("StanceModeChanged", function(chr, oldState, newState)
 		ply:SetValue("stance", newState)
 		if wareGame == 1 and newState == 2 and wareState == 1 then
 			setSyncedValue(ply, "wareWon", true)
-			playSound(ply, "ware::WARE_w"..math.random(1,3))	
+			playSound(ply, "ware_assets::WARE_w"..math.random(1,3))	
 		elseif wareGame == 1 and newState ~= 2 and oldState == 2 and wareState == 1 then
 			setSyncedValue(ply, "wareWon", false)
-			playSound(ply, "ware::WARE_l"..math.random(1,3))
+			playSound(ply, "ware_assets::WARE_l"..math.random(1,3))
 		elseif wareGame == 8 and newState == 3 and wareState == 1 then
 			setSyncedValue(ply, "wareWon", true)
-			playSound(ply, "ware::WARE_w"..math.random(1,3))	
+			playSound(ply, "ware_assets::WARE_w"..math.random(1,3))	
 		elseif wareGame == 8 and newState ~= 3 and oldState == 3 and wareState == 1 then
 			setSyncedValue(ply, "wareWon", false)
-			playSound(ply, "ware::WARE_l"..math.random(1,3))
+			playSound(ply, "ware_assets::WARE_l"..math.random(1,3))
 		end		
 	end
 end)
@@ -660,7 +660,7 @@ Character:Subscribe("FallingModeChanged", function(chr, oldState, newState)
 	if ply then
 		if wareGame == 2 and newState == 1 then
 			setSyncedValue(ply, "wareWon", true)
-			playSound(ply, "ware::WARE_w"..math.random(1,3))	
+			playSound(ply, "ware_assets::WARE_w"..math.random(1,3))	
 		end
 	end
 end)
