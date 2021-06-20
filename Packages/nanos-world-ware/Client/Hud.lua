@@ -29,11 +29,6 @@ Package:Subscribe("Load", function()
 end)
 
 Package:Subscribe("Unload", function()
-    if (MainHUD ~= nil) then
-		MainHUD:SetVisible(false)
-		MainHUD:Destroy()
-    end
-	
 	if (general_timer ~= nil) then
 		ClearTimeout(general_timer)
 	end
