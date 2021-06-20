@@ -491,7 +491,7 @@ function endMinigame()
 			playSoundForAll(ply, "ware_assets::WARE_Ending")
 			Events:BroadcastRemote("ShowWinners", {})
 			table.insert(wareTimers, Timer:SetTimeout(10000, function()
-				Server:ReloadPackage("nanos-world-ware")
+				Server:ReloadPackage("ware")
 				return false
 			end))	
 			return false
