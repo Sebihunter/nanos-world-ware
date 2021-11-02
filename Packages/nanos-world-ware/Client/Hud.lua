@@ -11,8 +11,8 @@ MainHUD = WebUI("Main HUD", "file:///UI/index.html")
 
 
 
--- When LocalPlayer spawns, sets an event on it to trigger when we possesses a new character, to store the local controlled character locally. This event is only called once, see Package:Subscribe("Load") to load it when reloading a package
-NanosWorld:Subscribe("SpawnLocalPlayer", function(local_player)
+-- When LocalPlayer spawns, sets an event on it to trigger when we possesses a new character, to store the local controlled character locally. This event is only called once, see Package.Subscribe("Load") to load it when reloading a package
+Client.Subscribe("SpawnLocalPlayer", function(local_player)
 	my_local_player = local_player
     local_player:Subscribe("Possess", function(ply,chr)
 		my_local_character = chr
@@ -22,13 +22,18 @@ NanosWorld:Subscribe("SpawnLocalPlayer", function(local_player)
 end)
 
 -- When package loads, verify if LocalPlayer already exists (eg. when reloading the package), then try to get and store it's controlled character
-Package:Subscribe("Load", function()
-    if (NanosWorld:GetLocalPlayer() ~= nil) then
-        UpdateLocalCharacter(NanosWorld:GetLocalPlayer():GetControlledCharacter())
+Package.Subscribe("Load", function()
+    if (Client.GetLocalPlayer() ~= nil) then
+        UpdateLocalCharacter(Client.GetLocalPlayer():GetControlledCharacter())
     end
 end)
 
-Package:Subscribe("Unload", function()
+Package.Subscribe("Unload", function()
+	Package.Warn("FEG2")
+	if MainHUD and MainHUD:IsValid() then 
+		Package.Warn("FEG3")
+		MainHUD:Destroy()
+	end
 	if (general_timer ~= nil) then
 		ClearTimeout(general_timer)
 	end
@@ -87,19 +92,19 @@ end
 
 -- Function to update the Ammo's UI
 function UpdateAmmo(enable_ui, ammo, ammo_bag)
-    MainHUD:CallEvent("UpdateWeaponAmmo", {enable_ui, ammo, ammo_bag})
+    MainHUD:CallEvent("UpdateWeaponAmmo", enable_ui, ammo, ammo_bag)
 end
 
 -- Function to update the Health's UI
 function UpdateHealth(health)
-    MainHUD:CallEvent("UpdateHealth", {health})
+    MainHUD:CallEvent("UpdateHealth", health)
 end
 
 -- Updates valuable information
-local general_timer = Timer:SetTimeout(100, function()
+local general_timer = Timer.SetInterval(function()
     if (my_local_character and my_local_character:IsValid() ) then
 		local my_vector = my_local_character:GetLocation()
-		--MainHUD:CallEvent("UpdatePosition", {tostring(my_vector.X), tostring(my_vector.Y), tostring(my_vector.Z)})
+		--MainHUD:CallEvent("UpdatePosition", tostring(my_vector.X), tostring(my_vector.Y), tostring(my_vector.Z))
 	end
 	
 	--Clear tables
@@ -108,7 +113,7 @@ local general_timer = Timer:SetTimeout(100, function()
 	for i=0, #ware_losers do ware_losers[i]=nil end
 
 	
-	for key, ply in pairs(NanosWorld:GetPlayers()) do
+	for key, ply in pairs(Player.GetAll()) do
 		if ply:IsLocalPlayer() then my_local_player = ply end
 		if (ply:GetControlledCharacter()) then
 			table.insert(ware_players, ply)
@@ -160,8 +165,8 @@ local general_timer = Timer:SetTimeout(100, function()
 		end	
 	end			
 	
-	MainHUD:CallEvent("UpdateList", {tostring(wRound), tostring(aRound), tostring(perc), tostring(winners), tostring(winstring), tostring(losers), tostring(losestring)})		
-end)
+	MainHUD:CallEvent("UpdateList", tostring(wRound), tostring(aRound), tostring(perc), tostring(winners), tostring(winstring), tostring(losers), tostring(losestring))		
+end, 100)
 
 
 -- Function to add a Nametag to a Player
@@ -196,32 +201,32 @@ function RemoveNametag(player, chr)
 end
 
 -- Adds a new Nametag to a character which was possessed
-Character:Subscribe("Possessed", function(chr, player)
+Character.Subscribe("Possessed", function(chr, player)
     AddNametag(player, chr)
 end)
 
 
-Events:Subscribe("UpdateText", function(text)
-	MainHUD:CallEvent("UpdateText",{tostring(text)})
+Events.Subscribe("UpdateText", function(text)
+	MainHUD:CallEvent("UpdateText", tostring(text))
 end)
 
 
 -- Removes the Nametag from a character which was unpossessed
-Character:Subscribe("UnPossessed", function(chr, player)
+Character.Subscribe("UnPossessed", function(chr, player)
     RemoveNametag(player, chr)
 end)
 
 -- When a Player is spawned - for when you connect and there is already Player's connected
-Player:Subscribe("Spawn", function(player)
+Player.Subscribe("Spawn", function(player)
     RemoveNametag(player)
     AddNametag(player)
 end)
 
 
-Events:Subscribe("ShowWinners", function()
+Events.Subscribe("ShowWinners", function()
 	local allPlayers = {}
 	local highestScore = 0;
-	for key, ply in pairs(NanosWorld:GetPlayers()) do
+	for key, ply in pairs(Player.GetAll()) do
 		if (ply:GetControlledCharacter()) then
 			allPlayers[#allPlayers+1] = {}
 			allPlayers[#allPlayers][0] = ply:GetName()
@@ -250,5 +255,5 @@ Events:Subscribe("ShowWinners", function()
 		end
 		place = place+1;
     end
-    MainHUD:CallEvent("ShowWinners",{tostring(roundOverString)})
+    MainHUD:CallEvent("ShowWinners", tostring(roundOverString))
 end)

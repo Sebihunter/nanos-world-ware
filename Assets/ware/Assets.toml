@@ -1,63 +1,68 @@
-# Asset Pack Configurations
+# asset pack configurations
 [asset_pack]
-	# Asset Pack Name
-	name =				"ware"
-	# Contributors
-	author =			"DaSebsch"
-	# Version
-	version =			"1.0.0"
-	# Image URL
-	image =				"https://s20.directupload.net/images/210423/sd7q2lo4.png"
-	# Unreal Folder - the root folder which the assets will have references to each other
-	unreal_folder =		"ware"
+    # asset pack name
+    name =              "ware"
+    # contributors
+    author =            "DaSebsch"
+    # version
+    version =           "1.0.0"
+    # image URL
+    image =             "https://s20.directupload.net/images/210423/sd7q2lo4.png"
+    # unreal engine folder - the name of the root folder (the one inside UnrealProject/Content/) which the assets will have references to each other
+    unreal_folder =     "ware"
 
-# Assets Files
+# assets files
 [assets]
-	# Maps
-	[assets.maps]
-		# MyMap = "MyFolder/MyAwesomeMap"
-		# ...
+    # maps
+    [assets.maps]
+        # MyMap = "MyFolder/MyAwesomeMap"
+        # ...
 
-	# Static Meshes
-	[assets.static_meshes]
-		# SM_Flower_01 = "MyFolder/SM_Awesome_Flower_01"
-		# ...
+    # static meshes
+    [assets.static_meshes]
+        # SM_Flower_01 = "MyFolder/SM_Awesome_Flower_01"
+        # ...
 
-	# Skeletal Meshes
-	[assets.skeletal_meshes]
-		# SK_Better_Man = "Characters/SK_BetterMan_03"
-		# ...
+    # skeletal meshes
+    [assets.skeletal_meshes]
+        # SK_Better_Man = "Characters/SK_BetterMan_03"
+        # ...
 
-	# Sounds
-	[assets.sounds]
-		WARE_Count1 = "audio/countdown_ann_sec1"
-		WARE_Count2 = "audio/countdown_ann_sec2"
-		WARE_Count3 = "audio/countdown_ann_sec3"
-		WARE_Count4 = "audio/countdown_ann_sec4"
-		WARE_Count5 = "audio/countdown_ann_sec5"
-		WARE_Ending = "audio/game_ending"
-		WARE_Lose = "audio/game_lose_two"
-		WARE_New = "audio/game_new_two"
-		WARE_Prologue = "audio/game_prologue"
-		WARE_Win = "audio/game_win_two"
-		WARE_l1 = "audio/local_lose1"
-		WARE_l2 = "audio/local_lose2"
-		WARE_l3 = "audio/local_lose3"
-		WARE_w1 = "audio/local_exo_won1"
-		WARE_w2 = "audio/local_exo_won2"
-		WARE_w3 = "audio/local_exo_won3"
+    # sounds
+    [assets.sounds]
+        WARE_Count1 = "audio/countdown_ann_sec1"
+        WARE_Count2 = "audio/countdown_ann_sec2"
+        WARE_Count3 = "audio/countdown_ann_sec3"
+        WARE_Count4 = "audio/countdown_ann_sec4"
+        WARE_Count5 = "audio/countdown_ann_sec5"
+        WARE_Ending = "audio/game_ending"
+        WARE_Lose = "audio/game_lose_two"
+        WARE_New = "audio/game_new_two"
+        WARE_Prologue = "audio/game_prologue"
+        WARE_Win = "audio/game_win_two"
+        WARE_l1 = "audio/local_lose1"
+        WARE_l2 = "audio/local_lose2"
+        WARE_l3 = "audio/local_lose3"
+        WARE_w1 = "audio/local_exo_won1"
+        WARE_w2 = "audio/local_exo_won2"
+        WARE_w3 = "audio/local_exo_won3"
 
-	# Animations
-	[assets.animations]
-		# A_Character_Jump = "Animations/A_Character_Jump"
-		# ...
+    # animations
+    [assets.animations]
+        # A_Character_Jump = "Animations/A_Character_Jump"
+        # ...
 
-	# Particles
-	[assets.particles]
-		# P_Big_Explosion = "Particles/P_Big_Explosion"
-		# ...
+    # particles
+    [assets.particles]
+        # P_Big_Explosion = "Particles/P_Big_Explosion"
+        # ...
 
-	# Other Assets (for not yet categorized ones)
-	[assets.others]
-		# A_Audio_Rifle_Fire = "Audios/A_Audio_Rifle_Fire_03"
-		# ...
+    # materials
+    [assets.materials]
+        # M_Red_Textured = "Materials/M_Red_Textured"
+        # ...
+
+    # other assets (for not yet categorized ones)
+    [assets.others]
+        # A_Audio_Rifle_Fire = "Audios/A_Audio_Rifle_Fire_03"
+        # ...
